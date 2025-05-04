@@ -32,7 +32,10 @@ def product(n, term):
     162
     """
     "*** YOUR CODE HERE ***"
-
+    total, k = 1, 1
+    while k <= n:
+        total, k = total * term(k), k + 1
+    return total
 
 def accumulate(fuse, start, n, term):
     """Return the result of fusing together the first n terms in a sequence 
@@ -54,6 +57,10 @@ def accumulate(fuse, start, n, term):
     19
     """
     "*** YOUR CODE HERE ***"
+    total, k = start, 1
+    while k <= n:
+        total, k = fuse(total, term(k)), k + 1
+    return total
 
 
 def summation_using_accumulate(n, term):
@@ -68,7 +75,7 @@ def summation_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(summation_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(add, 0, n, term)
 
 
 def product_using_accumulate(n, term):
@@ -83,8 +90,12 @@ def product_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(product_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    return ____
+    return accumulate(mul, 1, n, term)
 
+def compose1(f1, f2):
+    def g(x):
+        return f1(f2(x))
+    return g
 
 def make_repeater(f, n):
     """Returns the function that computes the nth application of f.
@@ -100,4 +111,4 @@ def make_repeater(f, n):
     390625
     """
     "*** YOUR CODE HERE ***"
-
+    return accumulate(compose1, identity, n, lambda x: f)
