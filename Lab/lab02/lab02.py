@@ -13,7 +13,7 @@ def composite_identity(f, g):
     >>> b1(4)                            # (4 + 1) ** 2 != 4 ** 2 + 1
     False
     """
-    "*** YOUR CODE HERE ***"
+    return lambda x: f(g(x)) == g(f(x))
 
 
 def sum_digits(y):
@@ -36,6 +36,7 @@ def is_prime(n):
 
 def count_cond(condition):
     """Returns a function with one parameter N that counts all the numbers from
+    "*** YOUR CODE HERE ***"
     1 to N that satisfy the two-argument predicate function Condition, where
     the first argument for Condition is N and the second argument is the
     number from 1 to N.
@@ -59,8 +60,15 @@ def count_cond(condition):
     >>> count_primes(20)   # 2, 3, 5, 7, 11, 13, 17, 19
     8
     """
-    "*** YOUR CODE HERE ***"
-
+    def f(n):
+        i = 1
+        count = 0
+        while i <= n:
+            if condition(n, i):
+                count += 1
+            i += 1
+        return count
+    return f
 
 def multiple(a, b):
     """Return the smallest number n that is a multiple of both a and b.
@@ -70,7 +78,12 @@ def multiple(a, b):
     >>> multiple(14, 21)
     42
     """
-    "*** YOUR CODE HERE ***"
+    def gcd(a, b):
+        while b:
+            a, b = b, a % b
+        return a
+
+    return a * b // gcd(a, b)
 
 
 
@@ -100,5 +113,20 @@ def cycle(f1, f2, f3):
     >>> do_two_cycles(1)
     19
     """
-    "*** YOUR CODE HERE ***"
+    def get_func(i):
+        if i % 3 == 1:
+            return f1
+        elif i % 3 == 2:
+            return f2
+        else:
+            return f3
 
+    def g(n):
+        def h(x):
+            i = 1
+            result = x            
+            while i <= n:
+                result, i = get_func(i)(result), i + 1
+            return result
+        return h
+    return g
